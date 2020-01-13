@@ -34,8 +34,8 @@ router.post('/register',upload.single('profilepic'),(req,res)=>{
 var sql="select email from person where email= ?";
 var email=req.body.email;
 console.log(req.body.email);
-db.query(sql,email,(err,result)=>{
-  if(result.length>0){
+db.query(sql,email,(err,row)=>{
+  if(row.length>0){
      res.render('main/register');
   }else {
       
@@ -81,9 +81,9 @@ db.query(sql,email,(err,result)=>{
     
             //insert into data base
             var sql='INSERT INTO person SET ?'
-             db.query(sql, newPerson, function(err, result){
+             db.query(sql, newPerson, function(err, row){
                 console.log('Error: '+err);
-                console.log('Success: '+result);
+                console.log('Success: '+row);
                });
 
         });
@@ -111,50 +111,70 @@ res.render('main/login');
 //@access  Public
 
 router.post('/login',(req,res)=>{
-// const email=req.body.email;
-// const password=req.body.password;
+ 
+ const email=req.body.email;
+ const password=req.body.password;
+var sql='SELECT * FROM person WHERE email=?';//row contain full row with matcing email
 
-var sql='SELECT * FROM person WHERE email = ?';//result contain full row with matcing email
-//,[email],
-db.query(sql,[req.body.email],(err,row)=>{
+db.query(sql,[email],(err,row)=>{
   if (err) throw err;
-console.log(row);
-res.render('main/home');
-//check wheathr result array empty or not
-// if(result.length>0){ 
-// //compare password
-// bcrypt.compare(req.body.password, result[0].password)
-// .then((isCorrect) => {
-//   if (isCorrect) {
-//     // res.json({ success: "User is able to login successfully" });
-//     //use payload and create token for user
-//     const payload = {
-//       id: result[0].id,
-//       name: result[0].name,
-//       email: result[0].email
-//     };
-//     jsonwt.sign(
-//       payload,
-//       key.secret,
-//       { expiresIn: 3600 },
-//       (err, token) => {
-//         res.render('main/home');
-//       }
-//     );
-//   } else {
-//     res.render('main/login');   //password not match
-//   }
+
+//check wheathr row array empty or not
+if(row.length>0){ 
+//compare password
+bcrypt.compare(password, row[0].password)
+.then((isCorrect) => {
+  if (isCorrect) {
+    // res.json({ success: "User is able to login successfully" });
+    //use payload and create token for user
+    const payload = {
+      id: row[0].id,
+      name: row[0].name,
+      email: row[0].email
+    };
+    jsonwt.sign(
+      payload,
+      key.secret,
+      { expiresIn: 3600 },
+      (err, token) => {
+        // res.render('main/home');
+
+        res.json({ 
+          success: true,
+          token: `Bearer ${token}` });
+      }
+    );
+  } else {
+      console.log("Login:Password not match");
+    res.render('main/login');   //password not match
+  }
 
 
-// }).catch(err=>console.log("Error bcrypt:"+err));//end of bcrypt
+}).catch(err=>console.log("Error bcrypt:"+err));//end of bcrypt
 
 
-// }else{
-//   res.render('main/login'); //mail not found
-// }
+}else{
+  console.log("Login:mail not match");
+  res.render('main/login'); //mail not found
+}
 
 });//End of query
 
 });//end of login route
 
+
+////@type   GET
+//@route  /api/auth/profile
+//@desc   route for user profile
+//@access  private
+
+router.get('/profile',passport.authenticate("jwt",{session:false}),(req,res)=>{
+  console.log(req.user.id);
+  res.json({
+    id: req.user.id,
+    name: req.user.name,
+    email: req.user.email,
+    profilepic: req.user.profilepic
+  });
+});
 module.exports=router;

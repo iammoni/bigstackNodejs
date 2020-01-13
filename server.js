@@ -7,7 +7,11 @@ var upload = multer({dest: './public/images'});
 var path=require('path');
 var exphbs = require('express-handlebars');
 var expressValidator=require('express-validator');
+const passport=require('passport');
 
+
+//Config for JWT strategy
+require("./strategies/jsonwtStategy")(passport); 
 
 
 //bring all routes
@@ -26,6 +30,10 @@ app.use(bodyparser.urlencoded({extended:true}));
 app.use('/api/auth',auth);
 app.use('/api/profile',profile);
 app.use('/api/questions',questions);
+
+
+//passport middleware
+app.use(passport.initialize());
 
 // Public Folder
 app.use(express.static(path.join(__dirname, 'public')));
