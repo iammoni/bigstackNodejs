@@ -113,12 +113,13 @@ res.render('main/login');
 router.post('/login',(req,res)=>{
  
  const email=req.body.email;
+ 
  const password=req.body.password;
 var sql='SELECT * FROM person WHERE email=?';//row contain full row with matcing email
 
 db.query(sql,[email],(err,row)=>{
   if (err) throw err;
-
+ //console.log(row);
 //check wheathr row array empty or not
 if(row.length>0){ 
 //compare password
@@ -138,10 +139,13 @@ bcrypt.compare(password, row[0].password)
       { expiresIn: 3600 },
       (err, token) => {
         // res.render('main/home');
-
-        res.json({ 
-          success: true,
-          token: `Bearer ${token}` });
+        if(err) console.log("Error in jwt.sign");
+        return res.json({payload, token});
+ 
+    //  res.cookie("cookie",{ 
+    //       success: true,
+    //       token: `Bearer ${token}` }).json({success: true,
+    //         token: `Bearer ${token}`});
       }
     );
   } else {
@@ -169,7 +173,7 @@ bcrypt.compare(password, row[0].password)
 //@access  private
 
 router.get('/profile',passport.authenticate("jwt",{session:false}),(req,res)=>{
-  console.log(req.user.id);
+  console.log("Profile:"+req.user.id);
   res.json({
     id: req.user.id,
     name: req.user.name,

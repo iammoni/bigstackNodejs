@@ -4,18 +4,23 @@ var db=require('../setup/db');
 var key=require('../setup/myurl')
 var opts = {};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+
+console.log("Extract-jwt:"+ExtractJwt.fromAuthHeaderAsBearerToken());
 opts.secretOrKey = key.secret;
 
 module.exports = passport => {
     passport.use(
       new JwtStrategy(opts, (jwt_payload, done) => {
-          var sql="select id from person where id=?";
-          db.query(sql,jwt_payload.id,(err,result)=>{
-             
+        console.log('Strategy IN')
+        console.log(jwt_payload.id);
+          var sql='SELECT * FROM person WHERE id=4';
+          db.query(sql,(err,user)=>{
+             console.log("User:"+user);
+             console.log("User id:"+user.name)
             if(err) throw err;
 
-            if(result.length>0){
-                return done(null,result);
+            if(user.length>0){
+                return done(null,user);
             }
             else{
                 return done(null,false);

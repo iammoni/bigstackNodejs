@@ -8,6 +8,8 @@ var path=require('path');
 var exphbs = require('express-handlebars');
 var expressValidator=require('express-validator');
 const passport=require('passport');
+var cookieParser=require('cookie-parser');
+
 
 
 //Config for JWT strategy
@@ -34,6 +36,8 @@ app.use('/api/questions',questions);
 
 //passport middleware
 app.use(passport.initialize());
+
+app.use(cookieParser());
 
 // Public Folder
 app.use(express.static(path.join(__dirname, 'public')));

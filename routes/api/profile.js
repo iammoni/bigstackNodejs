@@ -5,7 +5,7 @@ let passport=require('passport');
 
 
 
-router.get('/',(req,res)=>{
+router.get('/',passport.authenticate("jwt",{session:false}),(req,res)=>{
 
 let id=1;//req.user.id;
 
