@@ -4,7 +4,10 @@ var db=require('../../setup/db');
 let passport=require('passport');
 
 
-
+//@type   GET
+//@route  /api/profile
+//@desc   route for user profile
+//@access  private
 router.get('/',passport.authenticate("jwt",{session:false}),(req,res)=>{
 
 let id=1;//req.user.id;
@@ -25,6 +28,11 @@ db.query(sql,id,(err,result)=>{
 
 });
 
+
+//@type   POST
+//@route  /api/profile
+//@desc   route for user profile
+//@access  private
 router.post('/',/*passport.authenticate({session:false}),*/(req,res)=>{
 
     const profileValues = {};
@@ -76,6 +84,66 @@ router.post('/',/*passport.authenticate({session:false}),*/(req,res)=>{
             });
     }
        
+  });
+});
+
+
+//@type   GET
+//@route  /api/profile/:username
+//@desc   route for getting user profile using username
+//@access  PUBLIC
+
+router.get('/',(req,res)=>{
+   var username=req.params.username;
+   var sql='select * from profiles where id=?';
+   db.query(sql,[username],(err,profile)=>{
+     
+    if(err) throw err;
+    if(profile.length>0){
+        res.json(profile);
+    }else{
+        res.json({Error:"Profile not found"});
+    }
+   });
+});
+
+//@type   GET
+//@route  /api/profile/find/everyone
+//@desc   route for getting user profile using username
+//@access  PUBLIC
+
+router.get('/',(req,res)=>{
+    var username=req.params.username;
+    var sql='select * from profiles';
+    db.query(sql,(err,profile)=>{
+      
+     if(err) throw err;
+     if(profile.length>0){
+         res.json(profile);
+     }else{
+         res.json({Error:"Profile not found"});
+     }
+    });
+ });
+
+ //@type   GET
+//@route  /api/profile/find/everyone
+//@desc   route for getting user profile using username
+//@access  PRIVATE
+
+router.delete('/',passport.authenticate({session:false}),(req,res)=>{
+
+    var id=req.user.id;
+    var sql = "DELETE FROM profiless WHERE address =?";
+  db.query(sql,[id], function (err, result) {
+    if (err) throw err;
+    console.log("Number of records deleted from PROFILES: " + result.affectedRows);
+  });
+
+  var sql1 = "DELETE FROM person WHERE address =?";
+  db.query(sql1,[id], function (err, result) {
+    if (err) throw err;
+    console.log("Number of records deleted FROM PERSON: " + result.affectedRows);
   });
 });
 

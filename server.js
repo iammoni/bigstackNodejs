@@ -3,12 +3,14 @@ const bodyparser=require('body-parser');
 const port=process.env.PORT||1337;
 const app=express();
 var multer=require('multer');
-var upload = multer({dest: './public/images'});
+var upload = multer({ dest: './public/images/portfolio' });
+
 var path=require('path');
 var exphbs = require('express-handlebars');
 var expressValidator=require('express-validator');
 const passport=require('passport');
 var cookieParser=require('cookie-parser');
+var flash = require('connect-flash');
 
 
 
@@ -32,6 +34,8 @@ app.use(bodyparser.urlencoded({extended:true}));
 app.use('/api/auth',auth);
 app.use('/api/profile',profile);
 app.use('/api/questions',questions);
+app.use('/api/admin',admin);
+app.use('/api/index',index);
 
 
 //passport middleware
@@ -46,25 +50,28 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'views'));
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
+
+// Connect Flash
+app.use(flash());
  ////////end of middlewares///////// 
 
- // Validator
-// app.use(expressValidator({
-//     errorFormatter: function(param, msg, value) {
-//         var namespace = param.split('.')
-//         , root    = namespace.shift()
-//         , formParam = root;
+ Validator
+app.use(expressValidator({
+    errorFormatter: function(param, msg, value) {
+        var namespace = param.split('.')
+        , root    = namespace.shift()
+        , formParam = root;
   
-//       while(namespace.length) {
-//         formParam += '[' + namespace.shift() + ']';
-//       }
-//       return {
-//         param : formParam,
-//         msg   : msg,
-//         value : value
-//       };
-//     }
-//   }));
+      while(namespace.length) {
+        formParam += '[' + namespace.shift() + ']';
+      }
+      return {
+        param : formParam,
+        msg   : msg,
+        value : value
+      };
+    }
+  }));
 
 app.get('/',(req,res)=>{
 res.json({root:"This is root path"});
