@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var multer = require('multer');
 var upload = multer({dest: './public/images/portfolio'});
+const { check, validationResult } = require('express-validator');
 
 var db=require('../../setup/db');
 
@@ -15,10 +16,13 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/add', function(req, res, next) {
-    res.render('admin/add')
+	
+	res.json({'admin/add':"yes it is"});
+	res.render('admin/add');
 });
 
-router.post('/add', upload.single('projectimage'), function(req, res, next) {
+router.post('/add',[check('title', 'Title field is required').notEmpty(),
+check('service', 'Service field is required').notEmpty()], upload.single('projectimage'), function(req, res, next) {
     	// Get Form Values
 	  var title     = req.body.title;
 	  var description = req.body.description;
@@ -35,10 +39,10 @@ router.post('/add', upload.single('projectimage'), function(req, res, next) {
 	  }
 
 	   // Form Field Validation
-  		req.checkBody('title', 'Title field is required').notEmpty();
-  		req.checkBody('service', 'Service field is required').notEmpty();
+  		// req.check('title', 'Title field is required').notEmpty();
+  		// req.check('service', 'Service field is required').notEmpty();
 
-  		var errors = req.validationErrors();
+  		var errors = 0;//req.validationErrors();
 
   		if(errors){
 	    res.render('admin/add', {
@@ -66,9 +70,9 @@ router.post('/add', upload.single('projectimage'), function(req, res, next) {
        console.log('Success: '+result);
       });
 
-      req.flash('success_msg', 'Project Added');
+      //req.flash('success_msg', 'Project Added');
 
-      res.redirect('/admin');
+      res.redirect('/api/admin');
 });
 
 router.get('/edit/:id', function(req, res, next) {
@@ -157,11 +161,11 @@ router.post('/edit/:id', upload.single('projectimage'), function(req, res, next)
 });
 
 router.delete('/delete/:id', function (req, res) {
- db.query('DELETE FROM Projects WHERE id = '+req.params.id, function (err, result) {
+ db.query('DELETE FROM projects WHERE id = '+req.params.id, function (err, result) {
     if (err) throw err;
       console.log('deleted ' + result.affectedRows + ' rows');
   });
-    req.flash('success_msg', "Project Deleted");
+   // req.flash('success_msg', "Project Deleted");
     res.sendStatus(200);
 });
 

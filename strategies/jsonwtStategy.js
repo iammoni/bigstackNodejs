@@ -4,10 +4,22 @@ var db=require('../setup/db');
 var key=require('../setup/myurl')
 var opts = {};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-
-console.log("Extract-jwt:"+ExtractJwt.fromAuthHeaderAsBearerToken());
 opts.secretOrKey = key.secret;
+/* Extractjwt.fromAuthHeaderAsBeareToen=== Kuch asa ha:
+Extract-jwt:function (request) {
 
+        var token = null;
+        if (request.headers[AUTH_HEADER]) {
+            var auth_params = auth_hdr.parse(request.headers[AUTH_HEADER]);
+            if (auth_params && auth_scheme_lower === auth_params.scheme.toLowerCase()) {
+                token = auth_params.value;
+            }
+        }
+        return token;
+    }
+
+
+*/ 
 module.exports = passport => {
     passport.use(
       new JwtStrategy(opts, (jwt_payload, done) => {
