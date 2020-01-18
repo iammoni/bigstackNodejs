@@ -8,6 +8,7 @@ var db=require('../../setup/db');
 var path=require('path');
 var multer=require('multer');
 var upload = multer({dest: './public/images'});
+const verifyToken = require('../../strategies/jsonwtStategy');
 
 
 router.get('/',(req,res)=>{
@@ -140,8 +141,14 @@ bcrypt.compare(password, row[0].password)
       (err, token) => {
         // res.render('main/home');
         if(err) console.log("Error in jwt.sign");
-        return res.json({payload, token});
- 
+        //return res.json({payload, token});
+   
+         res.cookie('token', token, {
+          secure: false, // set to true if your using https
+          //httpOnly: true,
+        });
+        res.redirect('/api/auth/profile');
+
     //  res.cookie("cookie",{ 
     //       success: true,
     //       token: `Bearer ${token}` }).json({success: true,
@@ -171,7 +178,7 @@ bcrypt.compare(password, row[0].password)
 //@route  /api/auth/profile
 //@desc   route for user profile
 //@access  private
-
+//passport.authenticate("jwt",{session:false})
 router.get('/profile',passport.authenticate("jwt",{session:false}),(req,res)=>{
   console.log("Profile:"+req.user.id);
   res.json({

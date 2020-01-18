@@ -16,9 +16,6 @@ var flash = require('connect-flash');
 
 
 
-//Config for JWT strategy
-require("./strategies/jsonwtStategy")(passport); 
-
 
 //bring all routes
 const auth=require('./routes/api/auth');
@@ -39,9 +36,12 @@ app.use('/api/questions',questions);
 app.use('/api/admin',admin);
 app.use('/api/index',index);
 
-
+//Config for JWT strategy
+require("./strategies/jsonwtStategy")(passport); 
 //passport middleware
 app.use(passport.initialize());
+app.use(passport.session());
+
 
 app.use(cookieParser());
 

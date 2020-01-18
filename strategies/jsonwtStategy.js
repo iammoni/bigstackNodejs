@@ -1,25 +1,24 @@
 var JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
-var db=require('../setup/db');
-var key=require('../setup/myurl')
-var opts = {};
-opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-opts.secretOrKey = key.secret;
-/* Extractjwt.fromAuthHeaderAsBeareToen=== Kuch asa ha:
-Extract-jwt:function (request) {
-
-        var token = null;
-        if (request.headers[AUTH_HEADER]) {
-            var auth_params = auth_hdr.parse(request.headers[AUTH_HEADER]);
-            if (auth_params && auth_scheme_lower === auth_params.scheme.toLowerCase()) {
-                token = auth_params.value;
-            }
-        }
-        return token;
-    }
+ var db=require('../setup/db');
+ var key=require('../setup/myurl');
 
 
-*/ 
+ var cookieExtractor = function(req) {
+  var token = null;
+  console.log(req.cookies.token);
+  console.log("End of////");
+  //console.log(req);
+  if (req && req.cookies) {
+      token = req.cookies['jwt'];
+  }
+  console.log("token is:"+token);
+  return token;
+};
+// ...
+ var opts = {};
+ opts.jwtFromRequest = cookieExtractor;
+ opts.secretOrKey = key.secret;
 module.exports = passport => {
     passport.use(
       new JwtStrategy(opts, (jwt_payload, done) => {
@@ -38,14 +37,6 @@ module.exports = passport => {
                 return done(null,false);
             }
           });
-        // Person.findById(jwt_payload.id)
-        //   .then(person => {
-        //     if (person) {
-        //       return done(null, person);
-        //     }
-        //     return done(null, false);
-        //   })
-        //   .catch(err => console.log(err));
       })
     );
   };
