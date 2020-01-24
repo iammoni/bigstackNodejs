@@ -1,5 +1,42 @@
-<h1>Add Project</h1>
-<form method="post" action="/api/admin/add" enctype="multipart/form-data">
+<h1 style="margin-left: 250px;">Add Project</h1>
+<div id='id02' class="projectadd">      
+            <form class="modal-content animate" method="post"  action="/{{username}}/project/add"> 
+            <div class="imgcontainer"> 
+                <span onclick="location.href='/{{username}}'" class="close" title="Close Modal">×</span> 
+          
+                <img src= "/images/joker.jpg" alt="Avatar" class="avatar"> 
+            </div> 
+  
+            <div class="container"> 
+                <label style="color: black;"><b>Title:</b></label> 
+                <input type="text" placeholder="Enter Title" name="title" > 
+                <label><b>Service:</b></label> 
+                <input type="text" placeholder="Enter Service" name="service" > 
+
+                <label><b>Client:</b></label> 
+                <input type="text" placeholder="Enter Client" name="client" > 
+  
+                <label><b>Description:</b></label> 
+                <textarea class="form-control" name="description"></textarea>
+                
+                 <label><b>Project URL:</b></label> 
+                <input type="url" placeholder="Project URL" name="url" >
+
+                <label><b>Project Date:</b></label> 
+                <input type="date" placeholder="Project URL" name="projectdate">
+
+                <label style="color: black;" ><b>ProjectImage:</b></label> 
+                <input type="file"  name="projectimage"> 
+                <button type="submit">Submit</button> 
+            </div> 
+        </form> 
+    </div>
+     <!--End of id=id01-->
+
+
+
+
+{{!-- <form method="post" action="/api/admin/add" enctype="multipart/form-data">
   <div class="form-group">
     <label>Title</label>
     <input type="text" class="form-control" name="title" placeholder="Title">
@@ -29,4 +66,4 @@
     <input type="file" class="form-control" name="projectimage">
   </div>
   <button type="submit" class="button">Submit</button>
-</form>
+</form> --}}

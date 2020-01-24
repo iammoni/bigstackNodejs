@@ -1,6 +1,43 @@
-<a class="button secondary" href="/api/admin">Go Back</a>
+
+
+<h1 style="margin:250px;">Edit Project</h1>
+<div id='id02' class="projectadd">      
+            <form method="post" action="/{{username}}/project/edit/{{project.id}}">
+            <div class="imgcontainer"> 
+                <span onclick="location.href='/{{username}}/#about'" class="close" title="Close Modal">×</span> 
+          
+                <img src= "/images/joker.jpg" alt="Avatar" class="avatar"> 
+            </div> 
+  
+            <div class="container"> 
+                <label style="color: black;"><b>Title:</b></label> 
+                <input type="text" name="title" value="{{project.title}}"> 
+                <label><b>Service:</b></label> 
+                <input type="text" name="service" value="{{project.service}}"> 
+
+                <label><b>Client:</b></label> 
+                <input type="text" name="client" value="{{project.client}}"> 
+  
+                <label><b>Description:</b></label> 
+                <textarea  name="description">{{project.description}}</textarea>
+                
+                 <label><b>Project URL:</b></label> 
+                <input type="url"  name="url" value="{{project.url}}"  >
+
+                <label><b>Project Date:</b></label> 
+                <input type="date"  value="{{project.date}}" name="projectdate">
+
+                <label style="color: black;" ><b>ProjectImage:</b></label> 
+                <input type="file"  name="projectimage"  value="{{project.image}}"> 
+                <button type="submit">Submit</button> 
+            </div> 
+        </form> 
+    </div>
+
+
+{{!-- <a class="button secondary" href="/{{username}}">Go Back</a>
 <h3>Edit Project</h3>
-<form method="post" action="/admin/edit/{{project.id}}" enctype="multipart/form-data">
+<form method="post" action="/{{username}}/project/edit/{{project.id}}">
   <div class="form-group">
     <label>Title</label>
     <input type="text" class="form-control" name="title" placeholder="Title" value="{{project.title}}">
@@ -26,4 +63,4 @@
     <input type="file" class="form-control" name="projectimage" value="{{project.image}}">
   </div>
   <button type="submit" class="button">Submit</button>
-</form>
+</form> --}}

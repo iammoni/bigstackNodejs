@@ -1,5 +1,5 @@
 
-<h1>Add Project</h1>
+{{!-- <h1>Add Project</h1>
 <form method="post"  action="/api/auth/register"  enctype="multipart/form-data">
   <div class="form-group">
     <label>Name:</label>
@@ -19,4 +19,37 @@
   </div>
 
   <button type="submit" class="button">Submit</button>
-</form>
+</form> --}}
+
+       <div id='id02' class="logiF">
+        <form class="modal-content animate" method="POST" action="/register"> 
+            <div class="imgcontainer"> 
+                <span onclick="location.href='/login'" class="close" title="Close Modal">×</span> 
+          
+                <img src= "/images/joker.jpg" alt="Avatar" class="avatar"> 
+            </div> 
+  
+            <div class="container"> 
+                <label style="color: black;"><b>Username:</b></label> 
+                <input type="text" placeholder="Enter Username" name="username" required> 
+
+                <label><b>Name:</b></label> 
+                <input type="text" placeholder="Enter Name" name="name" required> 
+
+                <label><b>Email:</b></label> 
+                <input type="text" placeholder="Enter Email" name="email" required> 
+  
+                <label><b>Password:</b></label> 
+                <input type="password" placeholder="Enter Password" name="password" required> 
+                
+                 <label><b>Confirm Password:</b></label> 
+                <input type="password" placeholder="Enter Password Again" name="passwordagain" required>
+
+                <label style="color: black;" ><b>Upload Image:</b></label> 
+                <input type="file"  name="profilepic"> 
+                <button type="submit">Register</button> 
+                
+            </div> 
+        </form> 
+    </div>
+     <!--End of id=id01-->

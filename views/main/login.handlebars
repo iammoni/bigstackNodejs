@@ -1,4 +1,4 @@
-<h1>Login</h1>
+{{!-- <h1>Login</h1>
 <form  method="post"  action="/api/auth/login" >
 
   <div class="form-group">
@@ -11,4 +11,67 @@
   </div>
 
   <button type="submit" class="button">Submit</button>
-</form>
+</form> --}}
+
+{{!-- 
+    <div id="id01" class="modal"> 
+       <div class="logiF">
+        <form class="modal-content animate" action="/action_page.php"> 
+            <div class="imgcontainer"> 
+                <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">×</span> 
+                <img src= "../public/images/images.jpg" alt="Avatar" class="avatar"> 
+            </div> 
+  
+            <div class="container"> 
+                <label><b>Email:</b></label> 
+                <input type="text" placeholder="Enter Email" name="email" required> 
+  
+                <label><b>Password:</b></label> 
+                <input type="password" placeholder="Enter Password" name="password" required> 
+  
+                <button type="submit">Login</button> 
+                <p class="registerLink"><a  href="register.html">Register</a></p> 
+                <input type="checkbox" checked="checked"> Remember me 
+            </div> 
+  
+            <div class="container" style="background-color:#f1f1f1"> 
+                <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button> 
+                <span class="psw">Forgot <a href="#">password?</a></span> 
+            </div> 
+        </form> 
+    </div>
+    </div> <!--End of id=id01-->
+  
+    <script> 
+        var modal = document.getElementById('id01'); 
+        window.onclick = function(event) { 
+            if (event.target == modal) { 
+                modal.style.display = "none"; 
+            } 
+        } 
+    </script> --}}
+    <div id='id01' class="logiF">
+        <form class="modal-content animate" method="post"  action="/login"> 
+            <div class="imgcontainer"> 
+                <span onclick="location.href='/'" class="close" title="Close Modal">×</span> 
+                <img src= "/images/joker.jpg" alt="Avatar" class="avatar"> 
+            </div> 
+                <div class="container"> 
+                <label><b>Email:</b></label> 
+                <input type="text" placeholder="Enter Email" name="email" required> 
+  
+                <label><b>Password:</b></label> 
+                <input type="password" placeholder="Enter Password" name="password" required> 
+  
+                <button type="submit">Login</button> 
+                <p class="registerLink"><a style="color:blue" href="/register">Register</a></p> 
+                <p style="color: blue;"><input type="checkbox" checked="checked"> Remember me </p>
+              </div> 
+  
+            <div class="container" style="background-color:#f1f1f1"> 
+                <button type="button" onclick="location.href='/'" class="cancelbtn">Cancel</button> 
+                <span class="psw">Forgot <a href="#">password?</a></span> 
+            </div>
+          </form> 
+    </div>
+     <!--End of id=id01-->

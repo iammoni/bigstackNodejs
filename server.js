@@ -30,8 +30,8 @@ app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({extended:true}));
 
 //our actual routes make them use
-app.use('/api/auth',auth);
-app.use('/api/profile',profile);
+app.use('/',auth);
+app.use('/:username',profile);
 app.use('/api/questions',questions);
 app.use('/api/admin',admin);
 app.use('/api/index',index);
@@ -47,9 +47,10 @@ app.use(cookieParser());
 
 // Public Folder
 app.use(express.static(path.join(__dirname, 'public')));
+//All paths should be written from public like:"images/man_smonke.jpg"
 
 // View Engine
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'views'));//same for views
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
@@ -78,7 +79,4 @@ app.use(flash());
 //     }
 //   }));
 
-app.get('/',(req,res)=>{
-res.json({root:"This is root path"});
-});
 app.listen(port,()=>console.log(`Server is running at port :${port}`));

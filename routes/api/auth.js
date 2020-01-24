@@ -12,7 +12,7 @@ const verifyToken = require('../../strategies/jsonwtStategy');
 
 
 router.get('/',(req,res)=>{
-    res.send("HI Hanuman Ji");
+  res.render('main/home');
 });
 
 
@@ -43,7 +43,8 @@ db.query(sql,email,(err,row)=>{
            
        // Check Image Upload
 	  if(req.file){
-	    var profilepic = req.file.filename
+      var profilepic = req.file.filename
+      console.log("profilename:"+profilepic)
 	  } else {
 	    var profilepic = 'noimage.jpg';
 	  }
@@ -70,7 +71,8 @@ db.query(sql,email,(err,row)=>{
           name: req.body.name,
           email: email,
           password: req.body.password,
-          profilepic:profilepic
+          profilepic:profilepic,
+          username:req.body.username,
         };
       }
       //Encrypt password using bcrypt
@@ -93,7 +95,7 @@ db.query(sql,email,(err,row)=>{
   }//end of else
 });//end of query
 //redirect if success
-res.redirect(301,'/api/auth/login');
+res.redirect(301,'/login');
 });
 
 //@type   GET
@@ -123,6 +125,7 @@ db.query(sql,[email],(err,row)=>{
  //console.log(row);
 //check wheathr row array empty or not
 if(row.length>0){ 
+  console.log("ROW"+row);
 //compare password
 bcrypt.compare(password, row[0].password)
 .then((isCorrect) => {
@@ -134,6 +137,8 @@ bcrypt.compare(password, row[0].password)
       name: row[0].name,
       email: row[0].email
     };
+   var  username=row[0].username;
+   console.log(username);
     jsonwt.sign(
       payload,
       key.secret,
@@ -143,11 +148,8 @@ bcrypt.compare(password, row[0].password)
         if(err) console.log("Error in jwt.sign");
         //return res.json({payload, token});
    
-         res.cookie('token', token, {
-          secure: false, // set to true if your using https
-          //httpOnly: true,
-        });
-        res.redirect('/api/auth/profile');
+        res.cookie('jwt',token);
+        res.redirect(`/${username}`);
 
     //  res.cookie("cookie",{ 
     //       success: true,
@@ -180,12 +182,12 @@ bcrypt.compare(password, row[0].password)
 //@access  private
 //passport.authenticate("jwt",{session:false})
 router.get('/profile',passport.authenticate("jwt",{session:false}),(req,res)=>{
-  console.log("Profile:"+req.user.id);
+  var user=req.user[0];
   res.json({
-    id: req.user.id,
-    name: req.user.name,
-    email: req.user.email,
-    profilepic: req.user.profilepic
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    profilepic: user.profilepic
   });
 });
 module.exports=router;

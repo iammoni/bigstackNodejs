@@ -1,4 +1,49 @@
-<h1>Profile</h1>
+ 
+ <h1 style="margin-left: 200px;">My Profile:</h1>
+ <div id='id02' class="logiF">
+        <form class="modal-content animate" method="POST" action="/{{person.username}}/profile"> 
+            <div class="imgcontainer"> 
+                <span onclick="location.href='/{{person.username}}'" class="close" title="Close Modal">×</span> 
+          
+                <img src= "/images/joker.jpg" alt="Avatar" class="avatar"> 
+            </div> 
+  
+            <div class="container"> 
+                <label style="color: black;"><b>Username:</b></label> 
+                <input type="text" placeholder="Enter Username" value="{{person.username}}"> 
+
+                <label><b>Name:</b></label> 
+                <input type="text" placeholder="Enter Name"  value={{person.name}}> 
+
+                <label><b>Email:</b></label> 
+                <input type="text" placeholder="Enter Email" value="{{person.email}}"> 
+
+                 <label><b>Telephone No:</b></label> 
+                <input type="tel" placeholder="Enter Telephone No" name="usertel"  value="+91-">
+
+                <label><b>About You:</b></label> 
+                <textarea  name="about_user"></textarea>
+
+                 <label><b>My Skills:</b></label> 
+                <input type="text" placeholder="Angular(40),NodeJs(50),C++(60),..." name="skill"> 
+
+                <label><b>Country:</b></label> 
+                <input type="text" placeholder="Enter Country" name="country"  value="India"> 
+                
+                 <label><b>Languages:</b></label> 
+                <input type="text" placeholder="English,French,German,..." name="language">
+                <label><b>Social:</b></label> 
+                <input type="url" placeholder="https://youtube.com/shubham,http://facebook.com/shubham,.." name="social">
+
+                <label style="color: black;" ><b>Upload Images:</b></label> 
+                <input type="file"  name="user_image" multiple> 
+                <button type="submit">Submit Profile</button> 
+                
+            </div> 
+        </form> 
+    </div>
+     <!--End of id=id01-->
+{{!-- <h1>Profile</h1>
 <form method="post"  action="/api/profile">
   <div class="form-group">
     <label>Userame:</label>
@@ -18,4 +63,4 @@
   </div>
 -->
   <button type="submit" class="button">Submit</button>
-</form>
+</form> --}}
