@@ -11,6 +11,7 @@
 	<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/login.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script  type= src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
 <style>
 body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
 .w3-row-padding img {margin-bottom: 12px}
@@ -27,12 +28,12 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
 <nav class="w3-sidebar w3-bar-block w3-small w3-hide-small w3-center">
   <!-- Avatar image in top left corner -->
     {{#if profile}}
-    <img src="/images/portfolio/{{profile.profilepic}}" alt="boy" class="w3-image" width="992" height="1108">
+    <img src="/images/portfolio/{{person.profilepic}}" alt="boy" class="w3-image" width="992" height="1108">
     <a href="/#" class="w3-bar-item w3-button w3-padding-large w3-black">
     <i class="fa fa-home w3-xxlarge"></i>
     <p>HOME</p>
   </a>
-<a href="/{{profile.profile.username}}/#about" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+<a href="/{{profile.username}}/#about" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
     <i class="fa fa-user w3-xxlarge"></i>
     <p>ABOUT</p>
   </a>

@@ -1,7 +1,7 @@
  
  <h1 style="margin-left: 200px;">My Profile:</h1>
  <div id='id02' class="logiF">
-        <form class="modal-content animate" method="POST" action="/{{person.username}}/profile"> 
+        <form class="modal-content animate" method="POST" action="/{{person.username}}/profile" enctype="multipart/form-data"> 
             <div class="imgcontainer"> 
                 <span onclick="location.href='/{{person.username}}'" class="close" title="Close Modal">×</span> 
           
@@ -31,12 +31,12 @@
                 <input type="text" placeholder="Enter Country" name="country"  value="India"> 
                 
                  <label><b>Languages:</b></label> 
-                <input type="text" placeholder="English,French,German,..." name="language">
+                <input type="text" placeholder="English,French,German,..." name="languages">
                 <label><b>Social:</b></label> 
                 <input type="url" placeholder="https://youtube.com/shubham,http://facebook.com/shubham,.." name="social">
 
                 <label style="color: black;" ><b>Upload Images:</b></label> 
-                <input type="file"  name="user_image" multiple> 
+                <input type="file"  name="images" multiple> 
                 <button type="submit">Submit Profile</button> 
                 
             </div> 

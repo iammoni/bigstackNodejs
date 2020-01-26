@@ -4,10 +4,19 @@ var db=require('../../setup/db');
 let passport=require('passport');
 var url=require('url');
 var multer = require('multer');
-var upload = multer({dest: './public/images/portfolio'});
+
 const { check, validationResult } = require('express-validator');
+// var storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null,  './public/images/portfolio')
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, Date.now() + file.originalname)
+//   }
+// });
 
-
+var upload = multer({dest: './public/images/portfolio'});
+//var upload = multer({ storage: storage });
 // //@type   GET
 // //@route  /api/profile
 // //@desc   route for user profile
@@ -49,14 +58,48 @@ router.get('/',passport.authenticate("jwt",{session:false}),(req,res)=>{
            // console.log(row[0].username);
         //console.log("Profile userHome Found!");
         //console.log(row[0].profilepic)
+      sql="select * from profiles where id=?";
+
+      db.query(sql,user.id,(err,profile,fields)=>{
+          
+          const profileValues={};
+           if(profile[0].id) profileValues.id=profile[0].id;
+           if(profile[0].username) profileValues.username=profile[0].username;
+           if(profile[0].name) profileValues.name=profile[0].name;
+           if(profile[0].email) profileValues.email=profile[0].email;
+           if(profile[0].usertel) profileValues.usertel=profile[0].usertel;
+           if(profile[0].about_user) profileValues.about_user=profile[0].about_user;
+           //arrays ha
+
+           var skills=[];
+
+           var arr=profile[0].skill.split(',');
+           for(var i=0;i<arr.length;i++){
+           str=arr[i];
+           var value=Number(str.slice(str.indexOf('(')+1,str.length-1));
+           var name=str.slice(0,str.indexOf('('));
+
+             var obj={name:name,value:value};
+             skills.push(obj);
+            }
+           if(profile[0].skill) profileValues.skills=skills;
+           if(profile[0].languages) profileValues.languages=profile[0].languages.split(',');
+           if(profile[0].workrole) profileValues. workrole=profile[0].workrole.split(',');
+           if(profile[0].social) profileValues.social=profile[0].social.split(',');
+           if(profile[0].images) profileValues.images=profile[0].images.split(';');
+
+           console.log(profileValues);
+
         db.query("SELECT * FROM projects where user_id=?",user.id, function(err, rows, fields){
           
             if(err) throw err;
           return  res.render('main/home',{
-             "profile":row[0],
+             "profile":profileValues,
              "projects":rows,
+             "person":row[0],
        });
-    });
+    });//End of Projects
+  });//End of profile
     }
     else
     {
@@ -68,7 +111,7 @@ router.get('/',passport.authenticate("jwt",{session:false}),(req,res)=>{
         console.log('Redirected to home 2:');
          res.redirect('/');
       }
-   });
+   });//End of person 
 });
 
  //@type   GET
@@ -98,12 +141,13 @@ router.get('/profile',(req,res)=>{
 // @route  /:username/profile
 // @desc   route for user profile
 // @access  private
-router.post('/profile',passport.authenticate("jwt",{session:false}),upload.array('photos', 12),(req,res)=>{
-
+router.post('/profile',upload.array('images',12),passport.authenticate("jwt",{session:false}),(req,res)=>{
+       //req.files is array of objects
+       //console.log(req.files);
     const profileValues = {};
-    profileValues.id =req.user[0].id;
-    console.log(req.user[0]);
-   console.log("req.body:"+req.user[0].username);
+    
+    //console.log(req.user[0]);
+    //console.log("req.body:"+req.user[0].username);
     if (req.user[0].username) profileValues.username = req.user[0].username;
     if(req.user[0].name)  profileValues.name=req.user[0].name;
     if(req.user[0].email)  profileValues.email=req.user[0].email;
@@ -114,7 +158,30 @@ router.post('/profile',passport.authenticate("jwt",{session:false}),upload.array
     if (req.body.languages) profileValues.languages = req.body.languages;
     if(req.body.social)  profileValues.social=req.body.social;
     
-    console.log(profileValues);
+
+
+         // Check Image Upload
+	       if(req.files){
+         var arr=req.files;
+           var images='';
+           for(var i=0;i<arr.length;i++){
+
+              images+=';'+arr[i].filename;
+            }
+
+        images=images.substr(1,images.length);
+        // console.log("IMages:")
+        // console.log(images);
+         profileValues.images=images;
+
+	       } else {
+          profileValues.images = 'noimage.jpg';
+	         }
+          
+        
+        //   console.log("Profile:");
+        //  console.log(profileValues);
+     
     // if (typeof req.body.languages !== undefined) {
     //   profileValues.languages = req.body.languages.split(",");
     // }
@@ -125,41 +192,43 @@ router.post('/profile',passport.authenticate("jwt",{session:false}),upload.array
     // if (req.body.facebook) profileValues.social.facebook = req.body.facebook;
     // if (req.body.instagram) profileValues.social.instagram = req.body.instagram;
      
-    // add to database &update if want to update
+   // add to database &update if want to update
     
-  // var sql='select * from profiles where id=?';
- 
-  // db.query(sql,req.user[0].id,(err,result)=>{
-  //   if (err) throw err;  
-  //   if(result.length>0){
+  var sql='select * from profiles where id=';
+   
+  db.query(sql,req.user[0].id,(err,result)=>{
+    if (err) throw err; 
+    console.log(result) 
+    if(result.length>0){
         
-  //       var sql = "UPDATE profiles SET ?";
-  //       db.query(sql,profileValues,(err,result)=>{
+        var sql = "UPDATE profiles SET profileValues where id=req.user[0].id";
+        db.query(sql,(err,result)=>{
          
-  //           if(err) console.log("Error in Upadte:"+err);
-  //           else{
-  //               console.log("Success :"+result);
-  //           } 
+            if(err) console.log("Error in Upadte:"+err);
+            else{
+                console.log("Success :"+result);
+            } 
 
-  //       });
-  //   }else{
-  //           let sql='select * from profiles where username=?';
-  //           db.query(sql,req.body.username,(req,row)=>{
-  //               if(err) console.log("Error in Save:"+err)
-  //               if(row.length>0){
-  //                  res.json({username:"Username is already present"});
-  //              }else{
-  //               db.query('INSERT INTO profiles SET ?', profileValues, function(err, result){
-  //                   console.log('Error: '+err);
-  //                   console.log('Success Insert: '+result);
-  //                  });
+        });
+     }else{
+            let sql='select * from profiles where username=?';
+            db.query(sql,req.user[0].username,(err,rows)=>{
+                if(err) console.log("Error in Save:"+err)
+                if(rows.length>0){
+                   res.json({username:"Username is already present"});
+               }else{
+                profileValues.id =req.user[0].id;
+                db.query('INSERT INTO profiles SET ?', profileValues, function(err, result){
+                    console.log('Error: '+err);
+                    console.log('Success Insert: '+result);
+                   });
                 
-  //              } 
-  //           });
-  //   }
+               } 
+            });
+    }
        
-  // });//End of Query
-
+  });//End of Query
+   res.redirect(`/${req.user[0].username}`);
 });
 
 ////Add project

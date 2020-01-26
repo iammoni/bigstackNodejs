@@ -51,7 +51,50 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // View Engine
 app.set('views', path.join(__dirname, 'views'));//same for views
-app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+var hbs = exphbs.create({
+    // Specify helpers which are only registered on this instance.
+    defaultLayout: 'main',
+    partialsDir:'views/partials',
+    helpers: {
+        list: function (value) { 
+             
+            let out="<div>";
+            for(var i=0;i<value.length;i++){
+            out=out+'<p class="w3-wide">'+value[i].name+'</p>'+
+            '<div class="w3-white">'+
+          '<div class="w3-dark-grey" style="height:28px;width:'+value[i].value+'%"'+'></div>'+
+          '</div>'
+            };
+
+          return out +'</div>';
+                },
+        photos: function (value) { 
+           var n=value.length;
+           var out1=out2='<div class="w3-half">';
+           if(n&1){
+            for(var i=0;i<n/2-0.5;i++){
+                out1=out1+'<img src="/images/portfolio/'+ value[i]+'"'+' style="width:100%"></img>';
+            }
+            out1+='</div>';
+            for(var i=n/2-0.5;i<n;i++){
+                out2=out2+'<img src="/images/portfolio/'+ value[i]+'"'+' style="width:100%"></img>';
+            }
+            out2+='</div>';
+           }else{
+            for(var i=0;i<n/2;i++){
+                out1=out1+'<img src="/images/portfolio/'+ value[i]+'"'+' style="width:100%"></img>';
+            }
+            out1+='</div>';
+            for(var i=n/2;i<n;i++){
+                out2=out2+'<img src="/images/portfolio/'+ value[i]+'"'+' style="width:100%"></img>';
+            }
+            out2+='</div>';
+           }//end of else
+          return out1+out2;
+        },
+    }
+});
+app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 
 app.use(check());
