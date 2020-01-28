@@ -32,12 +32,16 @@ router.get('/register',(req,res)=>{
 //@desc   route for registration of user
 //@access  Public
 router.post('/register',upload.single('profilepic'),(req,res)=>{
-var sql="select email from person where email= ?";
+var sql="select email from profiles where email= ? or username=?";
 var email=req.body.email;
+var username=req.body.username;
 console.log(req.body.email);
-db.query(sql,email,(err,row)=>{
+db.query(sql,[email,username],(err,row)=>{
   if(row.length>0){
-     res.render('main/register');
+     res.render('main/register',{
+       Error:"Choose unique USERNAME and EMAIL",
+     }
+     );
   }else {
       
            
@@ -57,14 +61,14 @@ db.query(sql,email,(err,row)=>{
        
       if(errors){
         res.render('main/register', 
-        //{
-          //   errors: errors,
-          //   tit: title,
-          //   description: description,
-          //   service: service,
-          //   client: client,
-          //   url: url
-          // }
+        {
+            errors: errors,
+            tit: title,
+            description: description,
+            service: service,
+            client: client,
+            url: url
+          }
           );
       } else {
         var newPerson  = {
@@ -76,6 +80,7 @@ db.query(sql,email,(err,row)=>{
         };
       }
       //Encrypt password using bcrypt
+      console.log(newPerson);
       bcrypt.genSalt(10,(err, salt)=> {
         bcrypt.hash(newPerson.password, salt, function(err, hash) {
             if(err) throw err;
@@ -83,7 +88,7 @@ db.query(sql,email,(err,row)=>{
             newPerson.password=hash//hash has new password
     
             //insert into data base
-            var sql='INSERT INTO person SET ?'
+            var sql='INSERT INTO profiles SET ?'
              db.query(sql, newPerson, function(err, row){
                 console.log('Error: '+err);
                 console.log('Success: '+row);
@@ -118,7 +123,7 @@ router.post('/login',(req,res)=>{
  const email=req.body.email;
  
  const password=req.body.password;
-var sql='SELECT * FROM person WHERE email=?';//row contain full row with matcing email
+var sql='SELECT * FROM profiles WHERE email=?';//row contain full row with matcing email
 
 db.query(sql,[email],(err,row)=>{
   if (err) throw err;

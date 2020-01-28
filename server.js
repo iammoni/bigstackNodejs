@@ -7,14 +7,13 @@ var upload = multer({ dest: './public/images/portfolio' });
 
 var path=require('path');
 var exphbs = require('express-handlebars');
+var url=require('url');
 
 const { check, validationResult } = require('express-validator');
 
 const passport=require('passport');
 var cookieParser=require('cookie-parser');
 var flash = require('connect-flash');
-
-
 
 
 //bring all routes
@@ -57,9 +56,9 @@ var hbs = exphbs.create({
     partialsDir:'views/partials',
     helpers: {
         list: function (value) { 
-             
+             if(value){
             let out="<div>";
-            for(var i=0;i<value.length;i++){
+            for(var i=0;i< value.length;i++){
             out=out+'<p class="w3-wide">'+value[i].name+'</p>'+
             '<div class="w3-white">'+
           '<div class="w3-dark-grey" style="height:28px;width:'+value[i].value+'%"'+'></div>'+
@@ -67,8 +66,10 @@ var hbs = exphbs.create({
             };
 
           return out +'</div>';
+        }
                 },
         photos: function (value) { 
+            if(value){
            var n=value.length;
            var out1=out2='<div class="w3-half">';
            if(n&1){
@@ -91,8 +92,29 @@ var hbs = exphbs.create({
             out2+='</div>';
            }//end of else
           return out1+out2;
+        }
         },
-    }
+        
+        links:(arr)=>{
+            if(arr){
+            var arr_obj=
+     {'youtube.com':"fa fa-instagram",
+      'facebook.com':'fa fa-facebook-official',
+      'snapchat.com':'fa fa-snapchat',
+      'pinterest.com':'fa fa-pinterest',
+      'twitter.com':'fa fa-twitter',
+      'linkdin.com':'fa fa-linkedin'};
+             var out="";
+            for(var i=0;i<arr.length;i++){
+                var adr=arr[i];
+                var q = url.parse(adr, true);
+                out+= '<a href="'+adr+'"'+'><i class="'+arr_obj[q.host]+' w3-hover-opacity"></i></a>';
+               };
+
+               return out;
+            }
+        },
+    }//helpers
 });
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');

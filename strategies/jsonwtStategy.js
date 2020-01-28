@@ -25,7 +25,7 @@ module.exports = passport => {
       new JwtStrategy(opts, (jwt_payload, done) => {
         // console.log('Strategy IN')
         // console.log(jwt_payload.id);
-          var sql='SELECT * FROM person WHERE id=?';
+          var sql='SELECT * FROM profiles WHERE id=?';
           db.query(sql,jwt_payload.id,(err,user)=>{
 
             // console.log("User:"+user[0]);
